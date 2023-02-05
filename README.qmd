@@ -1,6 +1,9 @@
 ---
 title: "README"
 format: gfm
+execute: 
+  echo: false
+  warning: false
 ---
 
 ## Purpose
@@ -13,11 +16,116 @@ I have ingested this from the seven `.jsonl` files and saved it as two `.csv` fi
 
 You can download the first and second files [here](data/job_tech_data_pt_1.csv) and [here](data/job_tech_data_pt_2.csv), respectively.
 
-## EDA
+## Data description
 
 What information is collected?
 
-```{r}
+There are 46,000 adverts in this one percent sample across seven years from 2016 to 2022. There are 95 variables, the table below shows their names.
 
+```{r}
+library(tidyverse)
+theme_set(theme_light())
+
+skim <- read_rds("data/r/skim.rds")
+
+skim %>%
+  select(skim_variable, complete_rate, character.n_unique, logical.count) %>%
+  mutate(
+    skim_variable = str_replace_all(skim_variable, "_", " "),
+    skim_variable = str_to_title(skim_variable),
+    complete_rate = scales::percent(complete_rate, accuracy = 1),
+    character.n_unique = scales::number(character.n_unique, accuracy = 1)
+  ) %>%
+  knitr::kable(col.names = c("Variable", "Complete rate", "Unique values", "True/False counts"), align = c("l", "r", "r"), caption = "Variable descriptives")
+```
+
+## EDA
+
+```{r}
+df <- read_rds("data/r/job_tech_data.rds")
+
+df %>%
+  head(40) %>% view()
+```
+
+### Common titles
+
+```{r}
+df %>%
+  mutate(
+    headline = str_squish(headline),
+    headline = str_to_title(headline)
+  ) %>%
+  count(headline, sort = T) %>%
+  mutate(headline = fct_reorder(headline, n)) %>% 
+  slice_max(n, n = 15) %>%
+  ggplot(aes(n, headline)) +
+  geom_col(fill = "darkgreen", alpha = .8) +
+  labs(
+    x = "Number of adverts",
+    y = "Common headlines in advert"
+  )
+```
+
+### Duration of employment
+
+We would need to do some data cleaning here.
+
+```{r}
+df %>%
+  count(duration_label, sort = T) %>% 
+  filter(!is.na(duration_label)) %>% 
+  mutate(duration_label = str_to_title(duration_label),
+         duration_label = fct_reorder(duration_label, n)) %>% 
+  ggplot(aes(n, duration_label)) +
+  geom_col(fill = "darkred", alpha = .8) +
+  scale_x_continuous(
+    labels = scales::number_format()
+  ) +
+  labs(
+    x = "Number of adverts",
+    y = "Duration of employment"
+  )
+```
+
+### Common employers
+
+```{r}
+df %>%
+  # mutate(
+  #   employer_name = str_squish(employer_name),
+  #   employer_name = str_to_title(employer_name)
+  # ) %>%
+  count(employer_name, sort = T) %>%
+  mutate(employer_name = fct_reorder(employer_name, n)) %>% 
+  slice_max(n, n = 15) %>%
+  ggplot(aes(n, employer_name)) +
+  geom_col(fill = "orange", alpha = .8) +
+  labs(
+    x = "Number of adverts",
+    y = "Common employer names"
+  )
+```
+
+### Langauges
+
+There is column for the language detected in the advert text.
+
+```{r}
+df %>%
+  count(detected_language, sort = T) %>%
+  filter(!is.na(detected_language)) %>%
+  mutate(detected_language = fct_reorder(detected_language, n)) %>%
+  ggplot(aes(n, detected_language)) +
+  geom_col(fill = "midnightblue", alpha = .8) +
+  geom_label(aes(label = n), hjust = -.1) +
+  scale_x_continuous(
+    labels = scales::number_format(),
+    limits = c(NA, 45000)
+  ) +
+  labs(
+    x = "Number of adverts",
+    y = "Detected language"
+  )
 ```
 
