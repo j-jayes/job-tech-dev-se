@@ -1,0 +1,93 @@
+---
+title: "Ingest"
+format: html
+---
+
+## Purpose
+
+Ingest the data from the job tech website and save to excel so that people can look at it.
+
+## Planning
+
+The plan is to read in the data with `jsonlite` and then clean the names, unnest the data and save it out to excel format in a csv.
+
+### Read in the data
+
+```{r}
+library(tidyverse)
+library(jsonlite)
+
+# Get all the files
+files <- list.files(path = "data/json/", pattern = ".*", full.names = T)
+
+data_nested <- files %>% 
+  as_tibble() %>%
+  rename(file_path = value) %>% 
+  mutate(data = map(file_path, ~ stream_in(file(.))))
+
+data_nested_clean <- data_nested %>% 
+  mutate(year = as.numeric(str_extract(file_path, "[0-9][0-9][0-9][0-9]")),
+         data = map(data, flatten),
+         data = map(data, janitor::clean_names)) %>% 
+  select(-file_path)
+```
+
+There is a problem with the `original_id` column - for some years it's character and some it's numeric. Let's change then all to character.
+
+```{r}
+process_original_id <- function(row_num_in) {
+  message("Getting info from ", row_num_in)
+  tbl <- data_nested_clean %>%
+    slice(row_num_in) %>%
+    unnest(data) %>%
+    mutate(original_id = as.character(original_id))
+
+  return(tbl)
+}
+
+df_out_nested <- tibble(rn = 1:7) %>% 
+  mutate(data = map(rn, process_original_id))
+
+df_out <- df_out_nested %>% 
+  unnest(data)
+
+# df_out %>% 
+#   select(where(is.list)) %>% 
+#   colnames()
+
+df_out_character <- df_out %>%
+  unnest(
+    cols = c(driving_license, employment_type, occupation, occupation_field, occupation_group),
+    names_sep = "_",
+    keep_empty = FALSE
+  ) %>% 
+  mutate(across(where(is.list), as.character))
+```
+
+### Write out
+
+We're going to filter out columns that don't have more than 10 percent of the observations with values.
+
+```{r}
+missing_cols <- df_out_character %>% 
+  skimr::skim() %>% 
+  filter(complete_rate > 0.1) %>% 
+  pull(skim_variable)
+
+df_out_character %>% 
+  select(all_of(missing_cols)) %>% 
+  slice(1:23000) %>% 
+  write_excel_csv2("data/job_tech_data_pt_1.csv")
+
+df_out_character %>% 
+  select(all_of(missing_cols)) %>% 
+  slice(23001:50000) %>% 
+  write_excel_csv2("data/job_tech_data_pt_2.csv")
+
+df_out_character %>% 
+  select(all_of(missing_cols)) %>% 
+  write_rds("data/r/job_tech_data.rds")
+```
+
+
+

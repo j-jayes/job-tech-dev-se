@@ -1,0 +1,23 @@
+---
+title: "README"
+format: gfm
+---
+
+## Purpose
+
+This repo contains a one percent sample of the enriched jobtech data from [jobtechdev.se](https://jobtechdev.se/sv).
+
+They provide a one percent sample from 2016 to 2022Q2 to help you get to grips with the data.
+
+I have ingested this from the seven `.jsonl` files and saved it as two `.csv` files.
+
+You can download the first and second files [here](data/job_tech_data_pt_1.csv) and [here](data/job_tech_data_pt_2.csv), respectively.
+
+## EDA
+
+What information is collected?
+
+```{r}
+
+```
+
