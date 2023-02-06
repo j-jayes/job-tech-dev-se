@@ -12,9 +12,31 @@ This repo contains a one percent sample of the enriched jobtech data from [jobte
 
 They provide a one percent sample from 2016 to 2022Q2 to help you get to grips with the data.
 
-I have ingested this from the seven `.jsonl` files and saved it as two `.csv` files.
+I have ingested this from the seven `.jsonl` files and saved it as two `.csv` files (because they would be more than 100MB together).
 
-You can download the first and second files [here](data/job_tech_data_pt_1.csv) and [here](data/job_tech_data_pt_2.csv), respectively.
+You can download the first and second files from the table below.
+
+```{r}
+library(tidyverse)
+library(gt)
+theme_set(theme_light())
+
+tbl <- tibble(link = c("data/job_tech_data_pt_1.csv", "data/job_tech_data_pt_2.csv"))
+
+tbl %>%
+  mutate(
+    number = parse_number(link),
+    link = glue::glue("[JobTech data pt {number}]({link})"),
+    link = map(link, gt::md)
+  ) %>%
+  select(-number) %>% 
+  gt() %>%
+  fmt_markdown(columns = link) %>%
+  tab_header(title = md("**Download data here**")) %>%
+  tab_options(column_labels.hidden = TRUE) %>% 
+  as_raw_html(inline_css = TRUE)
+```
+
 
 ## Data description
 
@@ -23,9 +45,6 @@ What information is collected?
 There are 46,000 adverts in this one percent sample across seven years from 2016 to 2022. There are 95 variables, the table below shows their names.
 
 ```{r}
-library(tidyverse)
-theme_set(theme_light())
-
 skim <- read_rds("data/r/skim.rds")
 
 skim %>%
@@ -45,7 +64,8 @@ skim %>%
 df <- read_rds("data/r/job_tech_data.rds")
 
 df %>%
-  head(40) %>% view()
+  slice_sample(n = 10000) %>% 
+  write_excel_csv2("data/job_tech_data_10k_sample.csv")
 ```
 
 ### Common titles

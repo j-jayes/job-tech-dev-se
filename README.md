@@ -10,11 +10,27 @@ They provide a one percent sample from 2016 to 2022Q2 to help you get to
 grips with the data.
 
 I have ingested this from the seven `.jsonl` files and saved it as two
-`.csv` files.
+`.csv` files (because they would be more than 100MB together).
 
-You can download the first and second files
-[here](data/job_tech_data_pt_1.csv) and
-[here](data/job_tech_data_pt_2.csv), respectively.
+You can download the first and second files from the table below.
+
+<table style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif; display: table; border-collapse: collapse; margin-left: auto; margin-right: auto; color: #333333; font-size: 16px; font-weight: normal; font-style: normal; background-color: #FFFFFF; width: auto; border-top-style: solid; border-top-width: 2px; border-top-color: #A8A8A8; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #A8A8A8; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3;">
+  <thead style="">
+    <tr>
+      <td colspan="1" style="background-color: #FFFFFF; text-align: center; border-bottom-color: #FFFFFF; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; color: #333333; font-size: 125%; font-weight: initial; padding-top: 4px; padding-bottom: 4px; padding-left: 5px; padding-right: 5px; border-bottom-width: 0; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; font-weight: normal;" style><strong>Download data here</strong></td>
+    </tr>
+    
+  </thead>
+  
+  <tbody style="border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3;">
+    <tr><td style="padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; text-align: center;"><div class='gt_from_md'><p><a href="data/job_tech_data_pt_1.csv">JobTech data pt 1</a></p>
+</div></td></tr>
+    <tr><td style="padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; text-align: center;"><div class='gt_from_md'><p><a href="data/job_tech_data_pt_2.csv">JobTech data pt 2</a></p>
+</div></td></tr>
+  </tbody>
+  
+  
+</table>
 
 ## Data description
 
@@ -128,20 +144,20 @@ Variable descriptives
 
 ### Common titles
 
-![](README_files/figure-commonmark/unnamed-chunk-3-1.png)
+![](README_files/figure-commonmark/unnamed-chunk-4-1.png)
 
 ### Duration of employment
 
 We would need to do some data cleaning here.
 
-![](README_files/figure-commonmark/unnamed-chunk-4-1.png)
+![](README_files/figure-commonmark/unnamed-chunk-5-1.png)
 
 ### Common employers
 
-![](README_files/figure-commonmark/unnamed-chunk-5-1.png)
+![](README_files/figure-commonmark/unnamed-chunk-6-1.png)
 
 ### Langauges
 
 There is column for the language detected in the advert text.
 
-![](README_files/figure-commonmark/unnamed-chunk-6-1.png)
+![](README_files/figure-commonmark/unnamed-chunk-7-1.png)
